@@ -48,12 +48,14 @@ app.get("/api/posts/:postId", (req, res)=>{
 })
 
 app.post("/api/posts", upload.single("post-image") ,(req, res)=>{
-    
+
+    let fileUrl = req.file.path.replace(/\\/g, "/");
+
     const newPost = {
         "id": `${Date.now()}`,
         "title": req.body.title,
         "content": req.body.content,
-        "post_image": req.file.path,
+        "post_image": fileUrl,
         "added_date": `${Date.now()}`
     }
     postsData.add(newPost);
