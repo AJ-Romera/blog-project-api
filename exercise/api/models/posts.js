@@ -1,38 +1,34 @@
+const fs = require('fs')
 const PATH = "./data.json";
-const fs = require('fs');
 
 class Post {
 
+    add(newPost) {
+        const data = this.readData();
+        data.unshift(newPost);
+        this.storeData(data);
+    }
+
     get() {
-        /** Get Posts */
         return this.readData();
     }
 
-    getIndividualBlog(postId) {
-        /** Get One Blog Posts */
-        const posts = this.readData();
-        const foundPost = posts.find((post) => post.id == postId);
-        return foundPost;
-    }
-
-    add(newPost) {
-        /** Add new Post */
-        const currentPosts = this.readData();
-        currentPosts.unshift(newPost);
-        this.storeData(currentPosts);
-    }
-
     readData() {
-        let rawdata = fs.readFileSync(PATH);
-        let posts = JSON.parse(rawdata);
-        return posts;
+        try {
+            return JSON.parse(fs.readFileSync(PATH, 'utf8'));
+        } catch (err) {
+            console.error(err)
+            return false;
+        }
     }
 
-    storeData(rawdata) {
-        let data = JSON.stringify(rawdata);
-        fs.writeFileSync(PATH, data);
+    storeData(data) {
+        try {
+            fs.writeFileSync(PATH, JSON.stringify(data));
+        } catch (err) {
+            console.error(err)
+        }
     }
-
 }
 
 module.exports = Post;
